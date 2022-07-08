@@ -20,7 +20,7 @@
 */
 
 /// порядковый номер для 1й найденной группы
-const int startGroup = 1;
+const int startGroupNo = 1;
 
 /// Получение целочисленного значения от пользователя с консоли.
 ///     message - сообщение, выводимое пользователю
@@ -59,8 +59,7 @@ void FindUnicalGroupsDesc(int[] array, int groupNo)
 
         if (!divided)
         {
-            Array.Resize(ref groupNum, groupNum.Length + 1);
-            groupNum[groupNum.Length - 1] = array[i];
+            groupNum = AddItem(groupNum, array[i]);
             array = DeleteItem(array, i);
         }
     }
@@ -69,6 +68,45 @@ void FindUnicalGroupsDesc(int[] array, int groupNo)
     Console.WriteLine(String.Join(" ", groupNum));
     FindUnicalGroupsDesc(array, groupNo + 1);
 }
+
+/// Рекурсивный поиск и отображение числовых групп, согласно условия. Поиск "с начала".
+/// из исходного массива числа удаляются, по мере формирования групп
+/// исходный массив изменяет размер. 
+///     array - массив чисел, по которому происходит поиск
+///     groupNo - номер выводимой группы
+void FindUnicalGroupsAsc(int[] array, int groupNo)
+{
+    if (array.Length == 0)
+        return;
+
+    int[] groupNum = { array[0] };
+    array = DeleteItem(array, 0);
+
+    for (int i = 0; i < array.Length; i++)
+    {
+        bool divided = false;
+        for (int j = 0; j < groupNum.Length; j++)
+        {
+            divided = (array[i] % groupNum[j] == 0 || groupNum[j] % array[i] == 0);
+            if (divided)
+            {
+                break;
+            }
+        }
+
+        if (!divided)
+        {
+            groupNum = AddItem(groupNum, array[i]);
+            array = DeleteItem(array, i);
+        }
+    }
+
+    Console.Write($"Group {groupNo}: ");
+    Console.WriteLine(String.Join(" ", groupNum));
+    FindUnicalGroupsAsc(array, groupNo + 1);
+}
+
+
 
 /// Удаление указанного элемента из массива. Возвращает массив нового размера.
 /// Если удаляемая позиция за пределами индексов массива, будет удален последний элемент.
@@ -85,14 +123,28 @@ int[] DeleteItem(int[] array, int itemPosition)
     return array;
 }
 
+/// Добавление нового элемента в массив. Возвращает новый массив
+///     array - массив для добавления
+///     value - добавляемое значение
+int[] AddItem(int[] array, int value)
+{
+    Array.Resize(ref array, array.Length + 1);
+    array[array.Length - 1] = value;
+
+    return array;
+}
+
 
 /// Main body.
 int maxNumber = InputInt("Input number: ");
-int[] digits = new int[maxNumber];
+int[] digitsForEnd = new int[maxNumber];
+int[] digitsForStart = new int[maxNumber];
 
-for (int i = 1; i <= maxNumber; i++)
+for (int i = 0; i < maxNumber; i++)
 {
-    digits[i - 1] = i;
+    digitsForEnd[i] = digitsForStart[i] = i + 1;
 }
 
-FindUnicalGroupsDesc(digits, startGroup);
+FindUnicalGroupsAsc(digitsForStart, startGroupNo);
+Console.WriteLine();
+FindUnicalGroupsDesc(digitsForEnd, startGroupNo);
