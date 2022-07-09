@@ -10,7 +10,7 @@
 */
 
 /// Максимальное количество пабов.
-int maxPubs = 12;
+const int maxPubs = 12;
 
 /// Время прохода к бару.
 const int yardTime = 20;
@@ -22,7 +22,7 @@ const int drinkTime = 15;
 const double pintValue = 0.57;
 
 /// Всего друзей.
-int friendCount = 4;
+const int friendCount = 4;
 
 /// Посещено баров
 int[] pubsVisited = { 0, 0, 0, 0 };
@@ -58,6 +58,7 @@ string MinuteToHour(int minutes)
 
 
 /// Main body.
+Console.WriteLine($"Total {maxPubs} pubs");
 
 for (int i = 0; i < maxPubs; i++)
 {

@@ -10,7 +10,7 @@
 */
 
 /// Максимальное количество пабов.
-int maxPubs = 12;
+const int maxPubs = 12;
 
 /// Время прохода к бару.
 const int yardTime = 20;
@@ -22,7 +22,7 @@ const int drinkTime = 15;
 const double pintValue = 0.57;
 
 /// Всего друзей.
-int friendCount = 4;
+const int friendCount = 4;
 
 /// Лимиты употребления пива.
 double[] beerLimit = { 1.1, 1.5, 2.2, 3.3 };
@@ -68,6 +68,7 @@ string Drinking(double beerLimit, int pubNo = 0, int timePassed = 0, double beer
 
 /// Main body.
 
+Console.WriteLine($"Total {maxPubs} pubs");
 for(int i=0; i<friendCount; i++)
 {
     Console.WriteLine($"Friend {i+1}: {Drinking(beerLimit[i])}");
