@@ -27,28 +27,28 @@ const int startGroupNo = 1;
 
 /// Получение целочисленного значения от пользователя с консоли.
 ///     message - сообщение, выводимое пользователю
-int InputInt(string message)
+long InputInt(string message)
 {
     Console.Write(message);
-    return Convert.ToInt32(Console.ReadLine());
+    return Convert.ToInt64(Console.ReadLine());
 }
 
 /// Рекурсивный поиск и отображение числовых групп, согласно условия. Поиск "с конца".
 /// Числа, переданные в группу из исходного массива удаляются, исходный массив изменяет размер. 
 ///     array - массив чисел, по которому происходит поиск
 ///     groupNo - номер выводимой группы
-void FindUnicalGroupsFirst(int[] array, int groupNo)
+void FindUnicalGroupsFirst(long[] array, int groupNo)
 {
     if (array.Length == 0)
         return;
 
-    int[] groupLine = { array[array.Length - 1] };
+    long[] groupLine = { array[array.Length - 1] };
     array = DeleteItem(array, array.Length - 1);
 
-    for (int i = array.Length - 1; i >= 0; i--)
+    for (long i = array.Length - 1; i >= 0; i--)
     {
         bool divided = false;
-        for (int j = 0; j < groupLine.Length; j++)
+        for (long j = 0; j < groupLine.Length; j++)
         {
             divided = (array[i] % groupLine[j] == 0 || groupLine[j] % array[i] == 0);
             if (divided)
@@ -71,7 +71,7 @@ void FindUnicalGroupsFirst(int[] array, int groupNo)
 /// Вывод группы чисел на экран
 ///     groupNo - номер группы
 ///     line - массив группы чисел 
-void PrintGroupLine(int groupNo, int[] line)
+void PrintGroupLine(int groupNo, long[] line)
 {
     Console.Write($"Group {groupNo}: ");
     Console.WriteLine(String.Join(" ", line));
@@ -83,12 +83,12 @@ void PrintGroupLine(int groupNo, int[] line)
 ///     groupNo - номер выводимой группы
 ///     founded - количество использованных чисел исходного массива (для выхода из рекурсии) 
 ///               по умолчанию - 0
-void FindUnicalGroupsSecond(int[] array, int groupNo, int founded = 0)
+void FindUnicalGroupsSecond(long[] array, int groupNo, int founded = 0)
 {
     if (founded == array.Length)
         return;
 
-    int[] groupLine = { };
+    long[] groupLine = { };
 
     for (int i = 0; i < array.Length; i++)
     {
@@ -133,9 +133,9 @@ void FindUnicalGroupsSecond(int[] array, int groupNo, int founded = 0)
 /// Если удаляемая позиция за пределами индексов массива, будет удален последний элемент.
 ///     array - массив для удаления элемента
 ///     itemPosition - позиция удаляемого элемента
-int[] DeleteItem(int[] array, int itemPosition)
+long[] DeleteItem(long[] array, long itemPosition)
 {
-    for (int j = itemPosition; j < array.Length - 1; j++)
+    for (long j = itemPosition; j < array.Length - 1; j++)
     {
         array[j] = array[j + 1];
     }
@@ -147,7 +147,7 @@ int[] DeleteItem(int[] array, int itemPosition)
 /// Добавление нового элемента в массив. Возвращает новый массив
 ///     array - массив для добавления
 ///     value - добавляемое значение
-int[] AddItem(int[] array, int value)
+long[] AddItem(long[] array, long value)
 {
     Array.Resize(ref array, array.Length + 1);
     array[array.Length - 1] = value;
@@ -157,21 +157,23 @@ int[] AddItem(int[] array, int value)
 
 
 /// Main body.
-int maxNumber = InputInt("Input number: ");
+long maxNumber = InputInt("Input number: ");
 
 if (maxNumber <= 0)
 {
-
+    Console.WriteLine("Wrong number!");
 }
-
-int[] digitsFirst = new int[maxNumber];
-int[] digitsSecond = new int[maxNumber];
-
-for (int i = 0; i < maxNumber; i++)
+else
 {
-    digitsFirst[i] = digitsSecond[i] = i + 1;
-}
+    long[] digitsFirst = new long[maxNumber];
+    long[] digitsSecond = new long[maxNumber];
 
-FindUnicalGroupsFirst(digitsFirst, startGroupNo);
-Console.WriteLine();
-FindUnicalGroupsSecond(digitsSecond, startGroupNo);
+    for (int i = 0; i < maxNumber; i++)
+    {
+        digitsFirst[i] = digitsSecond[i] = i + 1;
+    }
+
+    FindUnicalGroupsFirst(digitsFirst, startGroupNo);
+    Console.WriteLine();
+    FindUnicalGroupsSecond(digitsSecond, startGroupNo);
+}
