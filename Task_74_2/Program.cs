@@ -6,7 +6,7 @@
     Необходимо выяснить, до скольки баров смогут дойти каждый из друзей(Пройденное расстояние (в барах)), пока не упадет. 
     И сколько всего времени будет потрачено на выпивку.
 
-    Прямое решение
+    Решениеи в сприменениеим рекурсии
 */
 
 /// Максимальное количество пабов.
@@ -24,31 +24,16 @@ const double pintValue = 0.57;
 /// Всего друзей.
 int friendCount = 4;
 
-/// Посещено баров
-int[] pubsVisited = { 0, 0, 0, 0 };
-
-/// Количество выпитого пива.
-double[] beerDrinked = { 0.0, 0.0, 0.0, 0.0 };
-
 /// Лимиты употребления пива.
 double[] beerLimit = { 1.1, 1.5, 2.2, 3.3 };
-
-/// Время затраченное на веселье.
-int[] timePassed = { 0, 0, 0, 0 };
-
-/// Состояние друзей:
-///     true - на ногах, может бухать
-///     false - вечеринка окончена
-bool[] status = { true, true, true, true };
-
 
 /// Возвращает строковое представление времени в часах и минутах
 ///     minutes - время в минутах 
 string MinuteToHour(int minutes)
 {
-    string result = String.Empty;;
+    string result = String.Empty; ;
 
-    if(minutes > 59)
+    if (minutes > 59)
     {
         result += (minutes / 60) + " hour(s) ";
     }
@@ -56,25 +41,34 @@ string MinuteToHour(int minutes)
     return result += (minutes % 60) + " minute(s)";
 }
 
-
-/// Main body.
-
-for (int i = 0; i < maxPubs; i++)
+/// поиск алкогольных возможностей конкретного из друзей
+///     pubNo - паб, который посещает
+///     yardTime - время дойти до бара 
+///     drinkTime - время на выпить пиво
+///     beerLimit - предел выпиваемого алкоголя
+string Drinking(double beerLimit, int pubNo = 0, int timePassed = 0, double beerDrinked = 0.0)
 {
-    for (int k = 0; k < friendCount; k++)
+    beerDrinked += pintValue;
+    timePassed += yardTime + drinkTime;
+    pubNo++;
+
+    if (beerDrinked > beerLimit)
     {
-        if (status[k])
-        {
-            pubsVisited[k]++;
-            beerDrinked[k] += pintValue;
-            timePassed[k] += drinkTime + yardTime;
-            if (beerDrinked[k] > beerLimit[k])
-                status[k] = false;
-        }
+        return $"{pubNo} pubs, {MinuteToHour(timePassed)}";
+    }
+    else if (pubNo == maxPubs)
+    {
+        return $"{pubNo} pubs, {MinuteToHour(timePassed)} and may to continue";
+    }
+    else
+    {
+        return Drinking(beerLimit, pubNo, timePassed, beerDrinked);
     }
 }
 
-for (int i = 0; i < friendCount; i++)
+/// Main body.
+
+for(int i=0; i<friendCount; i++)
 {
-    Console.WriteLine($"Friend {i + 1}: {pubsVisited[i]} pubs, {MinuteToHour(timePassed[i])}");
+    Console.WriteLine($"Friend {i+1}: {Drinking(beerLimit[i])}");
 }
